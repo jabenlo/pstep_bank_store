@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSTEP Classroom Bank & Store</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-university"></i>
+                <span>PSTEP Bank & Store</span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <div class="nav-item" id="userInfo" style="display: none;">
+                    <span id="userName"></span>
+                    <button class="btn btn-outline" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Login Screen -->
+        <div id="loginScreen" class="screen active">
+            <div class="login-container">
+                <div class="login-card">
+                    <div class="login-header">
+                        <i class="fas fa-university"></i>
+                        <h1>PSTEP Classroom</h1>
+                        <p>Bank & Store System</p>
+                    </div>
+                    
+                    <div class="login-tabs">
+                        <button class="tab-btn active" onclick="switchTab('student')">Student</button>
+                        <button class="tab-btn" onclick="switchTab('teacher')">Teacher</button>
+                    </div>
+
+                    <!-- Teacher Login -->
+                    <div id="teacherLogin" class="login-form">
+                        <h2>Teacher Login</h2>
+                        <form onsubmit="teacherLogin(event)">
+                            <div class="form-group">
+                                <label for="teacherUsername">Username</label>
+                                <input type="text" id="teacherUsername" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="teacherPassword">Password</label>
+                                <input type="password" id="teacherPassword" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </button>
+                        </form>
+                        <div class="login-footer">
+                            <p>First time? <a href="#" onclick="showRegister()">Create Account</a></p>
+                        </div>
+                    </div>
+
+                    <!-- Student Login -->
+                    <div id="studentLogin" class="login-form active">
+                        <h2>Student Login</h2>
+                        <form onsubmit="studentLogin(event)">
+                            <div class="form-group">
+                                <label for="studentId">Student ID</label>
+                                <input type="text" id="studentId" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Teacher Registration -->
+                    <div id="teacherRegister" class="login-form">
+                        <h2>Create Teacher Account</h2>
+                        <form onsubmit="teacherRegister(event)">
+                            <div class="form-group">
+                                <label for="regUsername">Username</label>
+                                <input type="text" id="regUsername" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="regPassword">Password</label>
+                                <input type="password" id="regPassword" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-user-plus"></i> Create Account
+                            </button>
+                        </form>
+                        <div class="login-footer">
+                            <p><a href="#" onclick="showLogin()">Back to Login</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teacher Dashboard -->
+        <div id="teacherDashboard" class="screen">
+            <div class="dashboard-header">
+                <h1>Teacher Dashboard</h1>
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <h3 id="totalStudents">0</h3>
+                            <p>Students</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-shopping-bag"></i>
+                        <div>
+                            <h3 id="totalItems">0</h3>
+                            <p>Store Items</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-dollar-sign"></i>
+                        <div>
+                            <h3 id="totalRevenue">$0.00</h3>
+                            <p>Total Revenue</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-tabs">
+                <button class="tab-btn active" onclick="switchDashboardTab('students')">Students</button>
+                <button class="tab-btn" onclick="switchDashboardTab('store')">Store</button>
+                <button class="tab-btn" onclick="switchDashboardTab('profile')">Profile</button>
+            </div>
+
+            <!-- Students Tab -->
+            <div id="studentsTab" class="tab-content active">
+                <div class="section-header">
+                    <h2>Manage Students</h2>
+                    <button class="btn btn-primary" onclick="showAddStudent()">
+                        <i class="fas fa-plus"></i> Add Student
+                    </button>
+                </div>
+                <div class="students-grid" id="studentsGrid">
+                    <!-- Students will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Store Tab -->
+            <div id="storeTab" class="tab-content">
+                <div class="section-header">
+                    <h2>Manage Store</h2>
+                    <button class="btn btn-primary" onclick="showAddItem()">
+                        <i class="fas fa-plus"></i> Add Item
+                    </button>
+                </div>
+                <div class="items-grid" id="itemsGrid">
+                    <!-- Items will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Profile Tab -->
+            <div id="profileTab" class="tab-content">
+                <div class="profile-section">
+                    <h2>Profile Settings</h2>
+                    <form onsubmit="updateProfile(event)">
+                        <div class="form-group">
+                            <label for="profileUsername">Username</label>
+                            <input type="text" id="profileUsername" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="profilePassword">New Password (optional)</label>
+                            <input type="password" id="profilePassword">
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Update Profile
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Dashboard -->
+        <div id="studentDashboard" class="screen">
+            <div class="dashboard-header">
+                <h1>Student Dashboard</h1>
+                <div class="student-info">
+                    <div class="balance-card">
+                        <i class="fas fa-wallet"></i>
+                        <div>
+                            <h3 id="studentBalance">$0.00</h3>
+                            <p>Current Balance</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-tabs">
+                <button class="tab-btn active" onclick="switchStudentTab('account')">Account</button>
+                <button class="tab-btn" onclick="switchStudentTab('store')">Store</button>
+                <button class="tab-btn" onclick="switchStudentTab('cart')">
+                    Cart <span id="cartCount" class="cart-count">0</span>
+                </button>
+            </div>
+
+            <!-- Account Tab -->
+            <div id="accountTab" class="tab-content active">
+                <div class="account-section">
+                    <h2>Account Overview</h2>
+                    <div class="transactions-list" id="transactionsList">
+                        <!-- Transactions will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Store Tab -->
+            <div id="studentStoreTab" class="tab-content">
+                <div class="section-header">
+                    <h2>Store</h2>
+                </div>
+                <div class="store-grid" id="storeGrid">
+                    <!-- Store items will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Cart Tab -->
+            <div id="cartTab" class="tab-content">
+                <div class="section-header">
+                    <h2>Shopping Cart</h2>
+                    <button class="btn btn-success" onclick="checkout()" id="checkoutBtn" disabled>
+                        <i class="fas fa-credit-card"></i> Checkout
+                    </button>
+                </div>
+                <div class="cart-items" id="cartItems">
+                    <!-- Cart items will be loaded here -->
+                </div>
+                <div class="cart-total">
+                    <h3>Total: $<span id="cartTotal">0.00</span></h3>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Modal Title</h3>
+                <button class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Modal content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
